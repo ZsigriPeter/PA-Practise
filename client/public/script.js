@@ -30,8 +30,92 @@ const loadEvent = function() {
     divRoot.insertAdjacentHTML('beforeend', divWithClass(currentItem, 'album'));
   });
 
+
+  //PA tasks
+
+  console.log(`Number of products: ${products.length}`);
+
+  console.log(`Name of last product: ${products[products.length - 1].name}`);
+
+  console.log(`Number of songs of the first album: ${getSongCountInFirst()}`);
+
+  console.log(`Number of albums that are available: ${getAvailableAmount()}`);
+
+  //# PA 1
+
+  console.log('Albums thats name contains "World": ');
+  console.log(searchAlbums('World'));
+
+  console.log(`Average number of tracks per album: ${averageTrackCount().toFixed(2)}`);
+
+  console.log('Albums that are more expensive than 1000');
+  console.log(getAlbumsWithHigherPrice(1000));
+
+  //# PA 2
+
+  console.log(`Total runtime of the last product: ${getAlbumRuntime(products[products.length - 1])} s`);
+
+  console.log('The product which has the highest "price/runtime" ratio: ');
+  console.log(getMostValuableAlbumForRuntime());
+
   // Write your JavaScript code before this line
 
 };
+
+function getMostValuableAlbumForRuntime() {
+  let highestIndex = 0;
+  let highest = products[0].price / getAlbumRuntime(products[0]);
+  for (let i = 1; i < products.length; i++) {
+    if (highest < products[i].price / getAlbumRuntime(products[i])) {
+      highest = products[i].price / getAlbumRuntime(products[i]);
+      highestIndex = i;
+    }
+  }
+  return products[highestIndex];
+}
+
+function getAlbumRuntime(product) {
+  let sumRuntime = 0;
+  for (const track of product.details) {
+    sumRuntime += track.milliseconds / 1000;
+  }
+  return sumRuntime;
+}
+
+function getAlbumsWithHigherPrice(minPrice) {
+  const resultArray = [];
+  for (const album of products) {
+    if (album.price > minPrice) resultArray.push(album);
+  }
+  return resultArray;
+}
+
+function averageTrackCount() {
+  let trackSum = 0;
+  for (const album of products) {
+    trackSum += album.details.length;
+  }
+  return (trackSum / products.length);
+}
+
+function searchAlbums(namePart) {
+  const resultArray = [];
+  for (const album of products) {
+    if (album.name.includes(namePart)) resultArray.push(album);
+  }
+  return resultArray;
+}
+
+function getSongCountInFirst() {
+  return products[0].details.length;
+}
+
+function getAvailableAmount() {
+  let count = 0;
+  for (let i = 0; i < products.length; i++) {
+    if (products[i].status === 'available') count++;
+  }
+  return count;
+}
 
 window.addEventListener('load', loadEvent);
