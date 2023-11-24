@@ -58,9 +58,52 @@ const loadEvent = function() {
   console.log('The product which has the highest "price/runtime" ratio: ');
   console.log(getMostValuableAlbumForRuntime());
 
+  //# PA 3
+
+  console.log(`The different genre count that id:141 have:${getGenreCount(products[140])}`);
+  console.log(products[140]);
+  divRoot.insertAdjacentHTML('afterbegin', divElementCustom(`The different genre count that id:141 have:${getGenreCount(products[140])}`, 'h2'));
+
+  console.log('Products that have more than one genre: ');
+  console.log(getAlbumsWithMultipleGenres());
+
+  console.log('Artists with one word names:');
+  console.log(getOneWordArtistNames());
+
   // Write your JavaScript code before this line
 
 };
+
+function getOneWordArtistNames() {
+  const oneWordNames=[];
+  for (const album of products) {
+    if(album.vendor.name.split(' ').length===1) {
+      const exists=(oneWordNames.find((name) => name === album.vendor.name));
+      if(!exists) {
+        oneWordNames.push(album.vendor.name);
+      }
+    }
+  }
+  return oneWordNames;
+}
+
+function getAlbumsWithMultipleGenres() {
+  const moreThanOneGenre=[];
+  for (const album of products) {
+    if(getGenreCount(album)>1) moreThanOneGenre.push(album);
+  }
+  return moreThanOneGenre;
+}
+
+function getGenreCount(album) {
+  const genreIds=[];
+  for (const track of album.details) {
+    if(!genreIds.includes(track.genre_id)) {
+      genreIds.push(track.genre_id);
+    }
+  }
+  return genreIds.length;
+}
 
 function getMostValuableAlbumForRuntime() {
   let highestIndex = 0;
